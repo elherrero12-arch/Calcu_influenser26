@@ -1,4 +1,5 @@
-// Service Worker básico para PWA
+/* disable-translation */
+// Basic Service Worker for PWA
 const CACHE_NAME = 'calc-chapas-v1';
 const urlsToCache = [
   '/',
