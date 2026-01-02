@@ -1192,57 +1192,43 @@ if ('serviceWorker' in navigator) {
     });
 }
 
-// 3. BOTÓN DE INSTALACIÓN MANUAL
-if ('serviceWorker' in navigator && 'BeforeInstallPromptEvent' in window) {
-    let deferredPrompt;
+<!-- BOTÓN DE INSTALACIÓN - VERSIÓN HERRERO -->
+<script>
+// Crear botón apenas cargue la página
+window.addEventListener('load', function() {
+    // Crear el botón
+    const botonInstalar = document.createElement('button');
     
-    window.addEventListener('beforeinstallprompt', (e) => {
-        e.preventDefault();
-        deferredPrompt = e;
-        
-        // Crear botón
-        const installBtn = document.createElement('button');
-        installBtn.innerHTML = '📱 INSTALAR APP';
-        installBtn.style.cssText = `
-            position: fixed;
-            bottom: 20px;
-            right: 20px;
-            padding: 12px 18px;
-            background: #ff6b35;
-            color: white;
-            border: none;
-            border-radius: 25px;
-            font-weight: bold;
-            font-size: 14px;
-            cursor: pointer;
-            z-index: 10000;
-            box-shadow: 0 4px 15px rgba(255,107,53,0.5);
-        `;
-        
-        installBtn.onclick = () => {
-            if (deferredPrompt) {
-                deferredPrompt.prompt();
-                deferredPrompt.userChoice.then((choice) => {
-                    if (choice.outcome === 'accepted') {
-                        installBtn.remove();
-                    }
-                    deferredPrompt = null;
-                });
-            }
-        };
-        
-        document.body.appendChild(installBtn);
-    });
+    // Texto del botón
+    botonInstalar.innerHTML = '📱 INSTALAR APP';
     
-    // Detectar si ya está instalada
-    window.addEventListener('appinstalled', () => {
-        console.log('🎉 PWA instalada con éxito');
-    });
-}
+    // Estilo del botón (naranja, bien visible)
+    botonInstalar.style.cssText = `
+        position: fixed;
+        bottom: 20px;
+        right: 20px;
+        padding: 14px 20px;
+        background: #ff6b35;
+        color: white;
+        border: none;
+        border-radius: 25px;
+        font-weight: bold;
+        font-size: 15px;
+        cursor: pointer;
+        z-index: 9999;
+        box-shadow: 0 4px 15px rgba(255, 107, 53, 0.7);
+    `;
+    
+    // Qué pasa cuando tocan el botón
+    botonInstalar.onclick = function() {
+        alert('PARA INSTALAR LA APP:\n\n1. Toca los 3 puntitos (⋮) arriba\n2. Selecciona "Agregar a la pantalla"\n3. ¡Listo! La app queda instalada');
+    };
+    
+    // Agregar el botón a la página
+    document.body.appendChild(botonInstalar);
+    
+    console.log('✅ Botón de instalación creado para herreros');
+});
 </script>
 </body>
-
 </html>
-
-
-
