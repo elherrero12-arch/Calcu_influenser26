@@ -1170,5 +1170,20 @@
             console.log('Características: Rebaje fijo 0.03m, sin desperdicio 10%, sin materiales 30%');
         });
     </script>
+    <script>
+// Registrar Service Worker para PWA
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', function() {
+    navigator.serviceWorker.register('/sw.js')
+      .then(function(registration) {
+        console.log('✅ Service Worker registrado:', registration.scope);
+      })
+      .catch(function(error) {
+        console.log('❌ Error registrando Service Worker:', error);
+      });
+  });
+}
+    </script>
 </body>
+
 </html>
