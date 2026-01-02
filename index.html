@@ -1162,73 +1162,80 @@
             contenedor.style.display = 'block';
         }
 
-        // =============================================
-        // INICIALIZACIÓN
-        // =============================================
-        document.addEventListener('DOMContentLoaded', function() {
-            console.log('Calculadora de Frentes - Versión Influencer/Herreros cargada');
-            console.log('Características: Rebaje fijo 0.03m, sin desperdicio 10%, sin materiales 30%');
-        });
-    </script>
-    <script>
-// Registrar Service Worker para PWA
+<script>
+// =============================================
+// INICIALIZACIÓN + PWA
+// =============================================
+
+// 1. INICIALIZACIÓN
+document.addEventListener('DOMContentLoaded', function() {
+    console.log('Calculadora de Frentes - Versión Influencer/Herreros cargada');
+    console.log('Características: Rebaje fijo 0.03m, sin desperdicio 10%, sin materiales 30%');
+});
+
+// 2. REGISTRAR SERVICE WORKER
 if ('serviceWorker' in navigator) {
-  window.addEventListener('load', function() {
-    navigator.serviceWorker.register('/sw.js')
-      .then(function(registration) {
-        console.log('✅ Service Worker registrado:', registration.scope);
-      })
-      .catch(function(error) {
-        console.log('❌ Error registrando Service Worker:', error);
-      });
-  });
+    window.addEventListener('load', function() {
+        navigator.serviceWorker.register('/sw.js')
+            .then(function(registration) {
+                console.log('✅ Service Worker registrado:', registration.scope);
+            })
+            .catch(function(error) {
+                console.log('❌ Error registrando Service Worker:', error);
+            });
+    });
 }
-    </script>
-    <script>
-// Botón de instalación manual
+
+// 3. BOTÓN DE INSTALACIÓN MANUAL
 if ('serviceWorker' in navigator && 'BeforeInstallPromptEvent' in window) {
-  let deferredPrompt;
-  
-  window.addEventListener('beforeinstallprompt', (e) => {
-    e.preventDefault();
-    deferredPrompt = e;
+    let deferredPrompt;
     
-    // Crear botón
-    const installBtn = document.createElement('button');
-    installBtn.innerHTML = '📱 INSTALAR APP';
-    installBtn.style.cssText = `
-      position: fixed;
-      bottom: 20px;
-      right: 20px;
-      padding: 12px 18px;
-      background: #ff6b35;
-      color: white;
-      border: none;
-      border-radius: 25px;
-      font-weight: bold;
-      font-size: 14px;
-      cursor: pointer;
-      z-index: 10000;
-      box-shadow: 0 4px 15px rgba(255,107,53,0.5);
-    `;
+    window.addEventListener('beforeinstallprompt', (e) => {
+        e.preventDefault();
+        deferredPrompt = e;
+        
+        // Crear botón
+        const installBtn = document.createElement('button');
+        installBtn.innerHTML = '📱 INSTALAR APP';
+        installBtn.style.cssText = `
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            padding: 12px 18px;
+            background: #ff6b35;
+            color: white;
+            border: none;
+            border-radius: 25px;
+            font-weight: bold;
+            font-size: 14px;
+            cursor: pointer;
+            z-index: 10000;
+            box-shadow: 0 4px 15px rgba(255,107,53,0.5);
+        `;
+        
+        installBtn.onclick = () => {
+            if (deferredPrompt) {
+                deferredPrompt.prompt();
+                deferredPrompt.userChoice.then((choice) => {
+                    if (choice.outcome === 'accepted') {
+                        installBtn.remove();
+                    }
+                    deferredPrompt = null;
+                });
+            }
+        };
+        
+        document.body.appendChild(installBtn);
+    });
     
-    installBtn.onclick = () => {
-      if (deferredPrompt) {
-        deferredPrompt.prompt();
-        deferredPrompt.userChoice.then((choice) => {
-          if (choice.outcome === 'accepted') {
-            installBtn.remove();
-          }
-          deferredPrompt = null;
-        });
-      }
-    };
-    
-    document.body.appendChild(installBtn);
-  });
+    // Detectar si ya está instalada
+    window.addEventListener('appinstalled', () => {
+        console.log('🎉 PWA instalada con éxito');
+    });
 }
-    </script>
+</script>
 </body>
 
 </html>
+
 
