@@ -977,35 +977,35 @@
         // =============================================
 
         // Guardar cuando cambian
-       document.getElementById('precioKg').addEventListener('change', function() {
-           if (this.value) {
-               localStorage.setItem('precioKg', this.value);
-               console.log('💰 Precio kg guardado:', this.value);
-           }
-       });
+        document.getElementById('precioKg').addEventListener('change', function() {
+            if (this.value) {
+                localStorage.setItem('precioKg', this.value);
+                console.log('💰 Precio kg guardado:', this.value);
+            }
+        });
 
-       document.getElementById('precioPintura').addEventListener('change', function() {
-           if (this.value) {
-               localStorage.setItem('precioPintura', this.value);
-               console.log('🎨 Precio pintura guardado:', this.value);
-           }
-       });
+        document.getElementById('precioPintura').addEventListener('change', function() {
+            if (this.value) {
+                localStorage.setItem('precioPintura', this.value);
+                console.log('🎨 Precio pintura guardado:', this.value);
+            }
+        });
 
-       // Cargar precios guardados al iniciar
-      document.addEventListener('DOMContentLoaded', function() {
-          const precioKgGuardado = localStorage.getItem('precioKg');
-          const precioPinturaGuardado = localStorage.getItem('precioPintura');
+        // Cargar precios guardados al iniciar
+        document.addEventListener('DOMContentLoaded', function() {
+            const precioKgGuardado = localStorage.getItem('precioKg');
+            const precioPinturaGuardado = localStorage.getItem('precioPintura');
     
-          if (precioKgGuardado) {
-              document.getElementById('precioKg').value = precioKgGuardado;
-              console.log('💰 Precio kg cargado:', precioKgGuardado);
-          }
+            if (precioKgGuardado) {
+                document.getElementById('precioKg').value = precioKgGuardado;
+                console.log('💰 Precio kg cargado:', precioKgGuardado);
+            }
     
-          if (precioPinturaGuardado) {
-              document.getElementById('precioPintura').value = precioPinturaGuardado;
-              console.log('🎨 Precio pintura cargado:', precioPinturaGuardado);
-          }
-      });
+            if (precioPinturaGuardado) {
+                document.getElementById('precioPintura').value = precioPinturaGuardado;
+                console.log('🎨 Precio pintura cargado:', precioPinturaGuardado);
+            }
+        });
         // =============================================
         // FUNCIONES DE INTERFAZ
         // =============================================
@@ -1314,4 +1314,5 @@ window.addEventListener('appinstalled', function() {
 </body>
 
 </html>
+
 
