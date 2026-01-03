@@ -1234,78 +1234,106 @@
             });
         }
 
-        // =============================================
-        // BOTÓN DE INSTALACIÓN INTELIGENTE
-        // =============================================
+// =============================================
+// BOTÓN DE INSTALACIÓN MEJORADO
+// =============================================
 
-        let botonInstalar = null;
+let botonInstalar = null;
 
-        function crearBotonInstalacion() {
-          // Si ya existe, no crear otro
-          if (botonInstalar) return;
-     
-          // Crear botón
-          botonInstalar = document.createElement('button');
-          botonInstalar.innerHTML = '📱 INSTALAR APP';
-          botonInstalar.id = 'boton-instalar-app';
+// Función para verificar si YA está instalada
+function verificarSiYaEstaInstalada() {
+    // Método 1: display-mode (estándar)
+    if (window.matchMedia('(display-mode: standalone)').matches) {
+        console.log('📱 Ya está instalada (display-mode)');
+        return true;
+    }
     
-          // Estilo
-          botonInstalar.style.cssText = `
-              position: fixed;
-              bottom: 80px;
-              right: 20px;
-              padding: 14px 20px;
-              background: #ff6b35;
-              color: white;
-              border: none;
-              border-radius: 25px;
-              font-weight: bold;
-              font-size: 15px;
-              cursor: pointer;
-              z-index: 9999;
-              box-shadow: 0 4px 15px rgba(255, 107, 53, 0.7);
-              display: block;
-          `;
+    // Método 2: navigator.standalone (iOS)
+    if (window.navigator.standalone === true) {
+        console.log('📱 Ya está instalada (iOS)');
+        return true;
+    }
     
-          // Acción al tocar
-          botonInstalar.onclick = function() {
-              // Verificar si Chrome permite instalar
-              if (window.deferredPrompt) {
-                  window.deferredPrompt.prompt();
-                  window.deferredPrompt.userChoice.then(function(choiceResult) {
-                  if (choiceResult.outcome === 'accepted') {
-                      // Ocultar solo si se instala
-                      botonInstalar.style.display = 'none';
-                  }
-              });
-            } else {
-            // Instrucciones manuales
+    // Método 3: localStorage (nuestra marca)
+    if (localStorage.getItem('pwa_instalada') === 'true') {
+        console.log('📱 Marcada como instalada en localStorage');
+        return true;
+    }
+    
+    return false;
+    }
+
+    function crearBotonInstalacion() {
+    // Si ya está instalada, NO crear botón
+    if (verificarSiYaEstaInstalada()) {
+        console.log('✅ Ya instalada, sin botón');
+        return;
+    }
+    
+    // Si ya existe botón, no crear otro
+    if (botonInstalar) return;
+    
+    // Crear botón
+    botonInstalar = document.createElement('button');
+    botonInstalar.innerHTML = '📱 INSTALAR APP';
+    botonInstalar.id = 'boton-instalar-app';
+    
+    // Estilo
+    botonInstalar.style.cssText = `
+        position: fixed;
+        bottom: 80px;
+        right: 20px;
+        padding: 14px 20px;
+        background: #ff6b35;
+        color: white;
+        border: none;
+        border-radius: 25px;
+        font-weight: bold;
+        font-size: 15px;
+        cursor: pointer;
+        z-index: 9999;
+        box-shadow: 0 4px 15px rgba(255, 107, 53, 0.7);
+        display: block;
+    `;
+    
+    // Acción al tocar
+    botonInstalar.onclick = function() {
+        if (window.deferredPrompt) {
+            window.deferredPrompt.prompt();
+            window.deferredPrompt.userChoice.then(function(choiceResult) {
+                if (choiceResult.outcome === 'accepted') {
+                    // MARCA como instalada
+                    localStorage.setItem('pwa_instalada', 'true');
+                    botonInstalar.style.display = 'none';
+                    console.log('✅ Marcada como instalada');
+                }
+            });
+        } else {
             alert('PARA INSTALAR:\n\n' +
                   '1. Toca los 3 puntitos (⋮)\n' +
                   '2. Busca "Agregar a la pantalla"\n' +
                   '3. ¡Listo!\n\n' +
-                  'En Brave funciona al instante ✅');
+                  '✅ Se guarda en tu celular\n' +
+                  '✅ Funciona sin internet\n' +
+                  '✅ Carga más rápido');
         }
     };
     
     document.body.appendChild(botonInstalar);
     console.log('✅ Botón instalación creado');
-}
+   }
 
-// Crear botón cuando cargue la página
-window.addEventListener('load', crearBotonInstalacion);
+   // Crear botón cuando cargue la página
+   window.addEventListener('load', crearBotonInstalacion);
 
-// Si ya está instalada, ocultar botón
-if (window.matchMedia('(display-mode: standalone)').matches) {
-    console.log('📱 Ya está instalada como PWA');
-    if (botonInstalar) {
-        botonInstalar.style.display = 'none';
-    }
-}
-
-// Detectar cuando se instala
-window.addEventListener('appinstalled', function() {
+   // Detectar cuando se instala
+    window.addEventListener('appinstalled', function() {
     console.log('🎉 PWA instalada exitosamente');
+    
+    // Marcar como instalada
+    localStorage.setItem('pwa_instalada', 'true');
+    
+    // Ocultar botón si existe
     if (botonInstalar) {
         botonInstalar.style.display = 'none';
     }
@@ -1314,6 +1342,7 @@ window.addEventListener('appinstalled', function() {
 </body>
 
 </html>
+
 
 
 
