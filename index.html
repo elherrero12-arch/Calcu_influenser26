@@ -1168,7 +1168,6 @@
             contenedor.style.display = 'block';
         }
 
-<script>
 // =============================================
 // INICIALIZACIÓN + PWA
 // =============================================
@@ -1192,9 +1191,11 @@ if ('serviceWorker' in navigator) {
     });
 }
 
-<!-- BOTÓN DE INSTALACIÓN - VERSIÓN HERRERO -->
-<script>
-// Crear botón apenas cargue la página
+// =============================================
+// BOTÓN DE INSTALACIÓN PWA - VERSIÓN HERRERO
+// =============================================
+
+// 1. Crear botón apenas cargue la página
 window.addEventListener('load', function() {
     // Crear el botón
     const botonInstalar = document.createElement('button');
@@ -1205,7 +1206,7 @@ window.addEventListener('load', function() {
     // Estilo del botón (naranja, bien visible)
     botonInstalar.style.cssText = `
         position: fixed;
-        bottom: 20px;
+        bottom: 80px;
         right: 20px;
         padding: 14px 20px;
         background: #ff6b35;
@@ -1221,14 +1222,29 @@ window.addEventListener('load', function() {
     
     // Qué pasa cuando tocan el botón
     botonInstalar.onclick = function() {
-        alert('PARA INSTALAR LA APP:\n\n1. Toca los 3 puntitos (⋮) arriba\n2. Selecciona "Agregar a la pantalla"\n3. ¡Listo! La app queda instalada');
+        alert('PARA INSTALAR LA APP:\n\n1. Toca los 3 puntitos (⋮) arriba\n2. Busca "Agregar a la pantalla"\n3. ¡Listo! La app queda fija en tu celular\n\n✅ Ya funciona SIN internet');
     };
     
     // Agregar el botón a la página
     document.body.appendChild(botonInstalar);
     
     console.log('✅ Botón de instalación creado para herreros');
+    
+    // 2. Verificar si ya está instalada como PWA
+    if (window.matchMedia('(display-mode: standalone)').matches) {
+        console.log('📱 Ya está instalada como PWA');
+        botonInstalar.style.display = 'none';
+    }
+});
+
+// 3. Detectar cuando se instala para ocultar botón
+window.addEventListener('appinstalled', function() {
+    console.log('🎉 PWA instalada exitosamente');
+    const boton = document.querySelector('button[innerHTML="📱 INSTALAR APP"]');
+    if (boton) {
+        boton.style.display = 'none';
+    }
 });
 </script>
 </body>
-</html>
+    </html>
