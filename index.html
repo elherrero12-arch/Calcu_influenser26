@@ -724,6 +724,61 @@
                 Contactame para acceder a todas las funciones avanzadas.
             </p>
             <button onclick="cerrarModalPro()">ENTENDIDO</button>
+            <!-- CERTIFICADO DE USO - NUEVO -->
+<div id="certificado" style="display: none;">
+    <div style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
+                background: rgba(0,0,0,0.85); z-index: 9999; padding: 20px; display: flex; align-items: center; justify-content: center;">
+        <div style="background: linear-gradient(135deg, #1a1a1a, #2d2d2d); padding: 25px; border-radius: 15px; 
+                    max-width: 400px; width: 90%; border: 2px solid #ff6b35; box-shadow: 0 0 30px rgba(255,107,53,0.3);">
+            <h3 style="color: #ff6b35; text-align: center; margin-bottom: 15px; font-size: 20px;">📜 CERTIFICADO DE USO</h3>
+            
+            <div style="background: rgba(255,107,53,0.1); padding: 15px; border-radius: 10px; margin-bottom: 15px;">
+                <p style="margin: 8px 0;"><strong>Calculadora de Chapas para Frentes</strong></p>
+                <p style="margin: 8px 0;">Versión: <span style="color: #ff6b35; font-weight: bold;">BÁSICA GRATUITA</span></p>
+                <p style="margin: 8px 0;">Desarrollador: <strong>[TU NOMBRE AQUÍ]</strong></p>
+                <p style="margin: 8px 0;">Contacto: <strong>[TU TELÉFONO/EMAIL]</strong></p>
+            </div>
+            
+            <hr style="border-color: #444; margin: 15px 0;">
+            
+            <div style="margin-bottom: 15px;">
+                <p style="color: #10b981; font-weight: bold;">✔ PERMITIDO:</p>
+                <ul style="padding-left: 20px; margin: 10px 0; font-size: 14px;">
+                    <li>Uso personal y educativo</li>
+                    <li>Modificar para uso propio</li>
+                    <li>Compartir con otros herreros</li>
+                </ul>
+            </div>
+            
+            <div style="margin-bottom: 20px;">
+                <p style="color: #dc2626; font-weight: bold;">❌ PROHIBIDO:</p>
+                <ul style="padding-left: 20px; margin: 10px 0; font-size: 14px;">
+                    <li>Uso comercial sin autorización</li>
+                    <li>Revender o cobrar por esta versión</li>
+                    <li>Redistribuir como producto propio</li>
+                </ul>
+            </div>
+            
+            <hr style="border-color: #444; margin: 15px 0;">
+            
+            <div style="background: rgba(59,130,246,0.1); padding: 12px; border-radius: 8px; margin-bottom: 20px;">
+                <p style="font-weight: bold; color: #3b82f6;">⚡ VERSIÓN PRO DISPONIBLE</p>
+                <p style="font-size: 13px; margin-top: 5px;">Con funciones avanzadas, personalización y soporte directo.</p>
+                <p style="font-size: 13px; margin-top: 5px;">Contactar al desarrollador para acceso.</p>
+            </div>
+            
+            <button onclick="cerrarCertificado()" 
+                    style="width: 100%; padding: 12px; background: linear-gradient(to right, #ff6b35, #ff8c35); 
+                           color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: bold;">
+                ENTENDIDO Y ACEPTO
+            </button>
+            
+            <p style="text-align: center; font-size: 11px; color: #888; margin-top: 15px;">
+                Este certificado se muestra solo la primera vez.
+            </p>
+        </div>
+    </div>
+</div>
         </div>
     </div>
 
@@ -1379,6 +1434,7 @@ function verificarSiYaEstaInstalada() {
 </body>
 
 </html>
+
 
 
 
