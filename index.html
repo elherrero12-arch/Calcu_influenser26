@@ -872,7 +872,30 @@
         function cerrarModalPro() {
             document.getElementById('modalPro').style.display = 'none';
         }
+        // =============================================     
+        // CERTIFICADO DE USO (solo primera vez)
+        // =============================================
+        function mostrarCertificado() {
+            document.getElementById('certificado').style.display = 'block';
+        }
 
+        function cerrarCertificado() {
+            document.getElementById('certificado').style.display = 'none';
+            localStorage.setItem('certificado_visto', 'true');
+        }
+
+        // Mostrar certificado solo primera vez al cargar
+        document.addEventListener('DOMContentLoaded', function() {
+           if (!localStorage.getItem('certificado_visto')) {
+               // Esperar 3 segundos para que cargue todo
+               setTimeout(() => {
+                  document.getElementById('certificado').style.display = 'block';
+                   }, 3000);
+           }
+        });
+
+        // También agregar botón para ver certificado cuando quieran
+        // (Podés agregar un botón en la interfaz si querés)
         // Cerrar modal al hacer clic fuera
         document.getElementById('modalPro').addEventListener('click', function(e) {
             if (e.target === this) {
@@ -1434,6 +1457,7 @@ function verificarSiYaEstaInstalada() {
 </body>
 
 </html>
+
 
 
 
