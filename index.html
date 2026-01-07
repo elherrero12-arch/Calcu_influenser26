@@ -573,6 +573,65 @@
             background: linear-gradient(45deg, #4a2a4a, #9966cc);
         }
 
+        /* ============ BOTONES UNIFICADOS ============ */
+        .btn-unificado {
+               background: var(--bg-tertiary) !important;
+               color: var(--text-secondary) !important;
+               border: 2px solid transparent !important;
+               border-radius: 6px !important;
+               padding: 14px 12px !important;
+               font-size: 14px !important;
+               font-weight: bold !important;
+               cursor: pointer !important;
+               transition: all 0.3s ease !important;
+               text-align: center !important;
+               width: 100% !important;
+               margin: 2px 0 !important;
+        }
+
+       .btn-unificado:hover,
+       .btn-unificado.activo {
+              background: var(--bg-tertiary) !important;
+              color: var(--text-primary) !important;
+              border: 2px solid var(--accent-primary) !important;
+              box-shadow: 0 0 15px var(--accent-primary) !important;
+              text-shadow: 0 0 10px var(--accent-primary) !important;
+        }
+
+       /* Efectos específicos por tema */
+       .tema-tron .btn-unificado:hover,
+       .tema-tron .btn-unificado.activo {
+               border: 2px solid #00f3ff !important;
+               box-shadow: 0 0 20px #00f3ff !important;
+               text-shadow: 0 0 10px #00f3ff !important;
+        }
+
+       .tema-batman .btn-unificado:hover,
+       .tema-batman .btn-unificado.activo {
+               border: 2px solid #ffff00 !important;
+               box-shadow: 0 0 20px #ffff00 !important;
+               text-shadow: 0 0 10px #ffff00 !important;
+        }
+
+       .tema-fundicion .btn-unificado:hover,
+       .tema-fundicion .btn-unificado.activo {
+               border: 2px solid #ff4444 !important;
+               box-shadow: 0 0 20px #ff4444 !important;
+               text-shadow: 0 0 10px #ff4444 !important;
+        }
+
+       .tema-starwars .btn-unificado:hover,
+       .tema-starwars .btn-unificado.activo {
+               border: 2px solid #9966cc !important;
+               box-shadow: 0 0 20px #9966cc !important;
+               text-shadow: 0 0 10px #9966cc !important;
+       }
+
+       /* Para el acordeón-cabecera específicamente */
+       .acordeon-cabecera.btn-unificado {
+               margin-top: 10px !important;
+       }
+        
         @media print {
             body { 
                 background: white !important; 
@@ -695,11 +754,11 @@
         <!-- Mensaje de éxito -->
         <div class="mensaje-exito" id="mensajeExito"></div>
         
-        <!-- Botones principales -->
-        <div class="botones-compactos">
-            <button onclick="calcularChapas()">CALCULAR CHAPAS</button>
-            <button onclick="limpiarCalculadora()">LIMPIAR TODO</button>
-        </div>
+        <!-- Botones principales (ESTILO UNIFICADO) -->
+       <div class="botones-compactos">
+              <button class="btn-unificado" onclick="calcularChapas()">CALCULAR CHAPAS</button>
+              <button class="btn-unificado" onclick="limpiarCalculadora()">LIMPIAR TODO</button>
+      </div>
 
         <!-- Botones PDF e Imprimir -->
         <div class="botones-pdf">
@@ -715,8 +774,8 @@
         
         <!-- Resultados -->
         <div class="acordeon">
-            <div class="acordeon-cabecera" onclick="toggleAcordeon('resultadosChapas')">
-                VER RESULTADOS COMPLETOS
+            <div class="acordeon-cabecera btn-unificado" onclick="toggleAcordeon('resultadosChapas')">
+                  VER RESULTADOS COMPLETOS
             </div>
             <div class="acordeon-contenido" id="resultadosChapas"></div>
         </div>
@@ -1461,7 +1520,8 @@ function verificarSiYaEstaInstalada() {
 </script>
 </body>
 
-</html>
+    </html>
+
 
 
 
