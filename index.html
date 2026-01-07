@@ -771,7 +771,7 @@
             
               <hr style="border-color: #444; margin: 15px 0;">
             
-            b <div style="background: rgba(59,130,246,0.1); padding: 12px; border-radius: 8px; margin-bottom: 20px;">
+              <div style="background: rgba(59,130,246,0.1); padding: 12px; border-radius: 8px; margin-bottom: 20px;">
                   <p style="font-weight: bold; color: #3b82f6;">⚡ VERSIÓN PRO DISPONIBLE</p>
                   <p style="font-size: 13px; margin-top: 5px;">Con funciones avanzadas, personalización y soporte directo.</p>
                   <p style="font-size: 13px; margin-top: 5px;">Contactar al desarrollador para acceso.</p>
@@ -1292,11 +1292,47 @@
                     ⚡ <strong>Versión PRO</strong> disponible con más funciones
                 </div>`;
 
-                html += `
-    <!-- SECCIÓN CONSEJOS DE HERRERO - NUEVO -->
-    <div style="background: var(--bg-tertiary); padding: 15px; border-radius: 8px; margin-top: 20px; border-left: 4px solid #f59e0b;">
-        <h4 style="color: #f59e0b; margin-bottom: 10px; text-align: center;">📌 CONSEJOS DE HERRERO</h4>
+            html += `
+<!-- CONSIDERACIONES PARA EL CÁLCULO AUTOMÁTICO (ACORDEÓN) -->
+<div style="margin-top: 20px;">
+    <div class="acordeon-cabecera" onclick="toggleAcordeon('consideracionesAuto')" style="background: #f59e0b; cursor: pointer;">
+        📊 CONSIDERACIONES PARA EL CÁLCULO AUTOMÁTICO
+    </div>
+    <div class="acordeon-contenido" id="consideracionesAuto" style="display: none; background: var(--bg-tertiary); border-left: 4px solid #f59e0b;">
         
+        <div style="margin-bottom: 12px; padding: 10px;">
+            <strong style="color: #cccccc;">🔩 Cantidad de puertas:</strong>
+            <ul style="padding-left: 20px; margin-top: 5px; font-size: 13px;">
+                <li>1-2 puertas → 2 frentes de marco</li>
+                <li>3-4 puertas → 3 frentes de marco (+1 parante central)</li>
+                <li>5+ puertas → Consultar por diseño especial</li>
+            </ul>
+        </div>
+        
+        <div style="margin-bottom: 12px; padding: 10px;">
+            <strong style="color: #cccccc;">⚡ Refuerzos Omega:</strong>
+            <ul style="padding-left: 20px; margin-top: 5px; font-size: 13px;">
+                <li>Hasta 1.5m de alto → 1 refuerzo horizontal</li>
+                <li>Más de 1.5m de alto → 2 refuerzos horizontales</li>
+                <li>Para frentes extra altos considerar refuerzos verticales</li>
+            </ul>
+        </div>
+        
+        <div style="margin-bottom: 5px; padding: 10px;">
+            <strong style="color: #cccccc;">🎯 Ajustes prácticos:</strong>
+            <ul style="padding-left: 20px; margin-top: 5px; font-size: 13px;">
+                <li>Agregar 2-3% extra por cortes y ajustes</li>
+                <li>Verificar tipo de bisagra para determinar rebaje</li>
+                <li>Para exteriores, considerar pintura anticorrosiva extra</li>
+            </ul>
+        </div>
+        
+        <p style="font-size: 12px; color: #888; margin-top: 10px; text-align: center; font-style: italic; padding: 10px;">
+            Estas consideraciones están basadas en experiencia práctica de taller y afectan el cálculo automático.
+        </p>
+    </div>
+</div>`;
+            
         <div style="margin-bottom: 12px;">
             <strong style="color: #cccccc;">🔩 Cantidad de puertas:</strong>
             <ul style="padding-left: 20px; margin-top: 5px; font-size: 13px;">
@@ -1464,6 +1500,7 @@ function verificarSiYaEstaInstalada() {
 </body>
 
 </html>
+
 
 
 
