@@ -1199,140 +1199,138 @@
         // =============================================
         function mostrarResultados(resultados) {
             const contenedor = document.getElementById('resultadosChapas');
-            
+    
             let html = `
                 <div class="info-extra" style="margin-bottom: 15px; text-align: center;">
                     FRENTE GABINETE | PRESUPUESTO N° ${String(contadorPresupuestos).padStart(3, '0')} | ${new Date().toLocaleDateString()}
                 </div>
-                
+         
                 <div class="tipo-mini rojo">
                     <strong>CONFIGURACIÓN USADA</strong>
                     <div class="resumen-linea">
                         <span>Rebaje:</span>
                         <span>${resultados.rebajeUsado} m (FIJO)</span>
-                    </div>
-                    <div class="resumen-linea">
-                        <span>Desarrollo marco:</span>
-                        <span>${resultados.desarrolloUsado} m</span>
-                    </div>
-                    <div class="resumen-linea">
-                        <span>Precio kg chapa:</span>
-                        <span>$${resultados.precioKgUsado.toLocaleString()}</span>
-                    </div>
-                    <div class="resumen-linea">
-                        <span>Precio pintura:</span>
-                        <span>$${resultados.precioPinturaUsado.toLocaleString()}/L</span>
-                    </div>
-                </div>
-                
-                <div class="tipo-mini azul">
-                    <strong>MEDIDAS Y PESOS</strong>
-                    <div class="resumen-linea">
-                        <span>Metros cuadrados:</span>
-                        <span>${resultados.m2Totales} m²</span>
-                    </div>
-                    <div class="resumen-linea">
-                        <span>Kg chapa (sin desperdicio):</span>
-                        <span>${resultados.kgChapa} kg</span>
-                    </div>
-                </div>
-                
-                <div class="pintura-info">
-                    <strong>PINTURA</strong>
-                    <div class="resumen-linea">
-                        <span>Litros necesarios:</span>
-                        <span>${resultados.litrosPintura} litros</span>
-                    </div>
-                    <div class="resumen-linea">
-                        <span>Costo pintura:</span>
-                        <span>$${resultados.costoPintura.toLocaleString()}</span>
-                    </div>
-                    <div class="resumen-linea" style="font-weight: bold; color: var(--accent-primary);">
-                        <span>Combinación óptima:</span>
-                        <span>${resultados.combinacionLatas}</span>
-                    </div>
-                </div>
-                
-                <div class="tipo-mini verde">
-                    <strong>DESGLOSE DE COSTOS</strong>
-                    <div class="resumen-linea">
-                        <span>Costo chapa:</span>
-                        <span>$${resultados.costoChapa.toLocaleString()}</span>
-                    </div>
-                    <div class="resumen-linea">
-                        <span>Costo pintura:</span>
-                        <span>$${resultados.costoPintura.toLocaleString()}</span>
-                    </div>
-                    <div class="resumen-linea" style="border-top: 1px solid var(--border-color); padding-top: 8px;">
-                        <span><strong>Total materiales (chapa + pintura):</strong></span>
-                        <span><strong>$${resultados.costoMateriales.toLocaleString()}</strong></span>
-                    </div>
-                    <div class="resumen-linea" style="border-top: 1px solid var(--border-color); padding-top: 8px;">
-                        <span>+ 100% mano de obra/ganancia:</span>
-                        <span>$${resultados.costoFinalSinFactura.toLocaleString()}</span>
-                    </div>`;
-
-            if (resultados.conFactura) {
-                html += `
-                    <div class="resumen-linea">
-                        <span>+ 15% factura:</span>
-                        <span>$${resultados.costoFinalConFactura.toLocaleString()}</span>
-                    </div>`;
-            }
-
-            html += `
-                    <div class="resumen-linea" style="border-top: 2px solid var(--accent-primary); padding-top: 8px; font-weight: bold;">
-                        <span>TOTAL FINAL:</span>
-                        <span>$${(resultados.conFactura ? resultados.costoFinalConFactura : resultados.costoFinalSinFactura).toLocaleString()}</span>
-                    </div>
-                </div>
-                
-                <div class="info-extra" style="margin-top: 15px; text-align: center; font-size: 11px;">
-                    📌 <strong>Versión básica</strong> - Rebaje fijo 0.03m<br>
-                    ⚡ <strong>Versión PRO</strong> disponible con más funciones
-                </div>`;
-
-                html += `
-     <!-- SECCIÓN CONSEJOS DE HERRERO - NUEVO -->
-     <div style="background: var(--bg-tertiary); padding: 15px; border-radius: 8px; margin-top: 20px; border-left: 4px solid #f59e0b;">
-         <h4 style="color: #f59e0b; margin-bottom: 10px; text-align: center;">📌 CONSEJOS DE HERRERO</h4>
-            
-        <div style="margin-bottom: 12px;">
-            <strong style="color: #cccccc;">🔩 Cantidad de puertas:</strong>
-            <ul style="padding-left: 20px; margin-top: 5px; font-size: 13px;">
-                <li>1-2 puertas → 2 frentes de marco</li>
-                <li>3-4 puertas → 3 frentes de marco (+1 parante central)</li>
-                <li>5+ puertas → Consultar por diseño especial</li>
-            </ul>
-        </div>
+                   </div>
+                   <div class="resumen-linea">
+                       <span>Desarrollo marco:</span>
+                       <span>${resultados.desarrolloUsado} m</span>
+                   </div>
+                   <div class="resumen-linea">
+                       <span>Precio kg chapa:</span>
+                       <span>$${resultados.precioKgUsado.toLocaleString()}</span>
+                   </div>
+                   <div class="resumen-linea">
+                       <span>Precio pintura:</span>
+                       <span>$${resultados.precioPinturaUsado.toLocaleString()}/L</span>
+                   </div>
+               </div>
         
-        <div style="margin-bottom: 12px;">
-            <strong style="color: #cccccc;">⚡ Refuerzos Omega:</strong>
-            <ul style="padding-left: 20px; margin-top: 5px; font-size: 13px;">
-                <li>Hasta 1.5m de alto → 1 refuerzo horizontal</li>
-                <li>Más de 1.5m de alto → 2 refuerzos horizontales</li>
-                <li>Para frentes extra altos considerar refuerzos verticales</li>
-            </ul>
-        </div>
+               <div class="tipo-mini azul">
+                   <strong>MEDIDAS Y PESOS</strong>
+                   <div class="resumen-linea">
+                       <span>Metros cuadrados:</span>
+                       <span>${resultados.m2Totales} m²</span>
+                   </div>
+                   <div class="resumen-linea">
+                       <span>Kg chapa (sin desperdicio):</span>
+                       <span>${resultados.kgChapa} kg</span>
+                   </div>
+               </div>
         
-        <div style="margin-bottom: 5px;">
-            <strong style="color: #cccccc;">🎯 Consideraciones prácticas:</strong>
-            <ul style="padding-left: 20px; margin-top: 5px; font-size: 13px;">
-                <li>Agregar 2-3% extra por cortes y ajustes</li>
-                <li>Verificar tipo de bisagra para determinar rebaje</li>
-                <li>Para exteriores, considerar pintura anticorrosiva extra</li>
-            </ul>
-        </div>
+               <div class="pintura-info">
+                   <strong>PINTURA</strong>
+                   <div class="resumen-linea">
+                       <span>Litros necesarios:</span>
+                       <span>${resultados.litrosPintura} litros</span>
+                   </div>
+                   <div class="resumen-linea">
+                       <span>Costo pintura:</span>
+                       <span>$${resultados.costoPintura.toLocaleString()}</span>
+                   </div>
+                   <div class="resumen-linea" style="font-weight: bold; color: var(--accent-primary);">
+                       <span>Combinación óptima:</span>
+                       <span>${resultados.combinacionLatas}</span>
+                   </div>
+               </div>
         
-        <p style="font-size: 12px; color: #888; margin-top: 10px; text-align: center; font-style: italic;">
-            Estos consejos están basados en experiencia práctica de taller.
-        </p>
-    </div>`
-            
-            contenedor.innerHTML = html;
-            contenedor.style.display = 'block';
+               <div class="tipo-mini verde">
+                   <strong>DESGLOSE DE COSTOS</strong>
+                   <div class="resumen-linea">
+                       <span>Costo chapa:</span>
+                       <span>$${resultados.costoChapa.toLocaleString()}</span>
+                   </div>
+                   <div class="resumen-linea">
+                       <span>Costo pintura:</span>
+                       <span>$${resultados.costoPintura.toLocaleString()}</span>
+                   </div>
+                   <div class="resumen-linea" style="border-top: 1px solid var(--border-color); padding-top: 8px;">
+                       <span><strong>Total materiales (chapa + pintura):</strong></span>
+                       <span><strong>$${resultados.costoMateriales.toLocaleString()}</strong></span>
+                   </div>
+                   <div class="resumen-linea" style="border-top: 1px solid var(--border-color); padding-top: 8px;">
+                       <span>+ 100% mano de obra/ganancia:</span>
+                       <span>$${resultados.costoFinalSinFactura.toLocaleString()}</span>
+                  </div>`;
+
+          if (resultados.conFactura) {
+             html += `
+                 <div class="resumen-linea">
+                     <span>+ 15% factura:</span>
+                     <span>$${resultados.costoFinalConFactura.toLocaleString()}</span>
+                 </div>`;
+          }
+
+          html += `
+                  <div class="resumen-linea" style="border-top: 2px solid var(--accent-primary); padding-top: 8px; font-weight: bold;">
+                      <span>TOTAL FINAL:</span>
+                      <span>$${(resultados.conFactura ? resultados.costoFinalConFactura : resultados.costoFinalSinFactura).toLocaleString()}</span>
+                  </div>
+              </div>
+        
+              <div class="info-extra" style="margin-top: 15px; text-align: center; font-size: 11px;">
+                 📌 <strong>Versión básica</strong> - Rebaje fijo 0.03m<br>
+                 ⚡ <strong>Versión PRO</strong> disponible con más funciones
+              </div>
+        
+              <!-- CONSIDERACIONES PARA EL CÁLCULO AUTOMÁTICO -->
+              <div style="margin-top: 20px;">
+                  <div class="acordeon-cabecera" onclick="toggleAcordeon('consideracionesAuto')" style="background: #f59e0b; color: #1a1a1a; font-weight: bold; cursor: pointer;">
+                      📊 CONSIDERACIONES PARA EL CÁLCULO AUTOMÁTICO
+                  </div>
+                  <div class="acordeon-contenido" id="consideracionesAuto" style="display: none; background: var(--bg-tertiary); border-left: 4px solid #f59e0b;">
+                      <div style="padding: 15px;">
+                          <strong style="color: #cccccc; display: block; margin-bottom: 10px;">🔩 Cantidad de puertas:</strong>
+                          <ul style="padding-left: 20px; margin: 5px 0 15px 0; font-size: 13px;">
+                              <li>1-2 puertas → 2 frentes de marco</li>
+                              <li>3-4 puertas → 3 frentes de marco (+1 parante central)</li>
+                              <li>5+ puertas → Consultar por diseño especial</li>
+                          </ul>
+                    
+                          <strong style="color: #cccccc; display: block; margin-bottom: 10px;">⚡ Refuerzos Omega:</strong>
+                          <ul style="padding-left: 20px; margin: 5px 0 15px 0; font-size: 13px;">
+                             <li>Hasta 1.5m de alto → 1 refuerzo horizontal</li>
+                             <li>Más de 1.5m de alto → 2 refuerzos horizontales</li>
+                             <li>Para frentes extra altos considerar refuerzos verticales</li>
+                          </ul>
+                    
+                          <strong style="color: #cccccc; display: block; margin-bottom: 10px;">🎯 Ajustes prácticos:</strong>
+                          <ul style="padding-left: 20px; margin: 5px 0 15px 0; font-size: 13px;">
+                              <li>Agregar 2-3% extra por cortes y ajustes</li>
+                              <li>Verificar tipo de bisagra para determinar rebaje</li>
+                              <li>Para exteriores, considerar pintura anticorrosiva extra</li>
+                         </ul>
+                    
+                         <p style="font-size: 12px; color: #888; text-align: center; font-style: italic; margin-top: 15px; border-top: 1px solid #444; padding-top: 10px;">
+                            Estas consideraciones están basadas en experiencia práctica de taller y afectan el cálculo automático.
+                         </p>
+                     </div>
+                 </div>
+             </div>`;
+    
+        contenedor.innerHTML = html;
+        contenedor.style.display = 'block';      
         }
-
+        
        // =============================================
        // INICIALIZACIÓN + PWA
        // =============================================
@@ -1464,6 +1462,7 @@ function verificarSiYaEstaInstalada() {
 </body>
 
 </html>
+
 
 
 
