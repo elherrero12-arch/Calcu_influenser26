@@ -5,25 +5,27 @@
     <title>Sistema Herrero - Calculadora de Chapas</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     
+    <!-- Añadido: Configuración PWA para ocultar banner de instalación -->
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="CalcChapas">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="application-name" content="CalcChapas">
+    
     <meta name="theme-color" content="#ff6b35">
     <link rel="manifest" href="manifest.json">
     <link rel="icon" href="icon.png">
 
     <!-- Para iOS -->
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <meta name="apple-mobile-web-app-title" content="CalcChapas">
     <link rel="apple-touch-icon" href="icon.png">
 
     <!-- Para Android -->
     <link rel="icon" type="image/png" href="icon.png">
     
     <style>
-   
         * { margin: 0; padding: 0; box-sizing: border-box; transition: all 0.3s ease; }
         
         :root {
-            /* VARIABLES POR DEFECTO (Tema Actual) */
             --bg-primary: #1a1a1a;
             --bg-secondary: #2d2d2d;
             --bg-tertiary: #333;
@@ -57,60 +59,121 @@
             color: var(--accent-primary);
         }
 
-        /* SELECTOR DE TEMAS - NUEVO */
+        /* SELECTOR DE TEMAS CON MENÚ DESPLEGABLE */
         .theme-selector {
-            display: flex;
-            gap: 5px;
             margin-bottom: 15px;
-            background: var(--bg-tertiary);
-            padding: 8px;
-            border-radius: 8px;
-            flex-wrap: wrap;
+            position: relative;
         }
 
-        .theme-btn {
-            flex: 1;
-            padding: 10px 5px;
+        .theme-menu-btn {
+            width: 100%;
+            padding: 14px 12px;
+            background: var(--bg-tertiary);
+            color: var(--text-primary);
+            border: 2px solid var(--border-color);
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: bold;
+            text-align: left;
+            position: relative;
+        }
+
+        .theme-menu-btn::after {
+            content: "▼";
+            position: absolute;
+            right: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 12px;
+        }
+
+        .theme-menu-btn.active::after {
+            content: "▲";
+        }
+
+        .theme-dropdown {
+            display: none;
+            position: absolute;
+            top: 100%;
+            left: 0;
+            width: 100%;
+            background: var(--bg-tertiary);
+            border: 1px solid var(--border-color);
+            border-radius: 0 0 6px 6px;
+            z-index: 100;
+            margin-top: 1px;
+        }
+
+        .theme-dropdown.show {
+            display: block;
+        }
+
+        .theme-option {
+            padding: 12px 15px;
             background: var(--bg-secondary);
             color: var(--text-secondary);
             border: none;
-            border-radius: 6px;
+            border-bottom: 1px solid var(--border-color);
             cursor: pointer;
-            font-size: 11px;
+            font-size: 13px;
+            text-align: left;
+            width: 100%;
+        }
+
+        .theme-option:last-child {
+            border-bottom: none;
+        }
+
+        .theme-option:hover {
+            background: var(--bg-tertiary);
+            color: var(--text-primary);
+        }
+
+        .theme-option.active {
+            color: var(--text-primary);
             font-weight: bold;
-            transition: all 0.3s;
-            min-width: 60px;
+            border-left: 3px solid var(--accent-primary);
         }
 
-        .theme-btn.active {
-             background: var(--bg-secondary); /* Fondo normal */
-             color: var(--text-primary);
-             transform: translateY(-2px);
-             border: 2px solid var(--accent-primary);
-             box-shadow: 0 0 10px var(--accent-primary);
+        /* CAMPOS VERTICALES - ALTO, ANCHO, CANTIDAD - MODIFICADO */
+        .campos-verticales {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin-bottom: 15px;
         }
 
-        /* Bordes específicos por tema */
-        [data-tema="tron"].active {
-             border: 2px solid #00f3ff !important;
-             box-shadow: 0 0 15px #00f3ff !important;
+        .campo-vertical {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+            position: relative;
         }
 
-        [data-tema="batman"].active {
-             border: 2px solid #ffff00 !important;
-             box-shadow: 0 0 15px #ffff00 !important;
+        .campo-vertical label {
+            font-size: 13px;
+            color: var(--text-secondary);
+            margin-left: 3px;
         }
 
-        [data-tema="fundicion"].active {
-             border: 2px solid #ff4444 !important;
-             box-shadow: 0 0 15px #ff4444 !important;
+        .campo-vertical input {
+            padding: 14px;
+            font-size: 16px;
+            background: var(--bg-secondary);
+            color: var(--text-primary);
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            width: 100%;
         }
 
-        [data-tema="starwars"].active {
-             border: 2px solid #9966cc !important;
-             box-shadow: 0 0 15px #9966cc !important;
-        }  
-      
+        /* Añadido: Texto de fondo placeholder */
+        .campo-vertical input::placeholder {
+            color: rgba(255, 255, 255, 0.3);
+            font-style: italic;
+        }
+
+        /* Configuración */
         .configuracion {
             background: var(--bg-tertiary);
             padding: 10px;
@@ -159,7 +222,6 @@
             color: var(--text-primary);
         }
         
-        /* ESTILO PARA OPCIÓN BLOQUEADA (PRO) */
         .boton-opcion.pro-bloqueado {
             background: #555 !important;
             color: #888 !important;
@@ -186,42 +248,42 @@
         }
         
         .boton-opcion.activo {
-            background: var(--bg-tertiary); /* Fondo normal */
+            background: var(--bg-tertiary);
             color: var(--text-primary);
             border: 2px solid var(--accent-primary);
             box-shadow: 0 0 15px var(--accent-primary),
-                                    0 0 25px var(--accent-primary) inset;
+                        0 0 25px var(--accent-primary) inset;
             position: relative;
         }
 
-        /* Efecto neón adicional para algunos temas */
+        /* Efectos temas */
         .tema-tron .boton-opcion.activo {
             border: 2px solid #00f3ff;
             box-shadow: 0 0 20px #00f3ff,
-                                    0 0 30px rgba(0, 243, 255, 0.3) inset;
+                        0 0 30px rgba(0, 243, 255, 0.3) inset;
             text-shadow: 0 0 10px #00f3ff;
         }
 
         .tema-batman .boton-opcion.activo {
              border: 2px solid #ffff00;
              box-shadow: 0 0 20px #ffff00,
-                                     0 0 30px rgba(255, 255, 0, 0.3) inset;
+                         0 0 30px rgba(255, 255, 0, 0.3) inset;
              text-shadow: 0 0 10px #ffff00;
-         }
+        }
 
-         .tema-fundicion .boton-opcion.activo {
+        .tema-fundicion .boton-opcion.activo {
              border: 2px solid #ff4444;
              box-shadow: 0 0 20px #ff4444,
-                                     0 0 30px rgba(255, 68, 68, 0.3) inset;
+                         0 0 30px rgba(255, 68, 68, 0.3) inset;
              text-shadow: 0 0 10px #ff4444;
-         }
+        }
 
-         .tema-starwars .boton-opcion.activo {
+        .tema-starwars .boton-opcion.activo {
              border: 2px solid #9966cc;
              box-shadow: 0 0 20px #9966cc,
-                                     0 0 30px rgba(153, 102, 204, 0.3) inset;
+                         0 0 30px rgba(153, 102, 204, 0.3) inset;
              text-shadow: 0 0 10px #9966cc;
-         }
+        }
         
         .opcion-contenido {
             display: none;
@@ -249,75 +311,56 @@
             border-radius: 6px;
         }
         
-        .controles-compactos {
+        .switch {
             display: flex;
-            flex-wrap: wrap;
-            gap: 8px;
-            margin-bottom: 15px;
+            align-items: center;
+            justify-content: space-between;
+            margin: 8px 0;
         }
-        
-        .controles-compactos input {
-            flex: 1;
-            min-width: 0;
+
+        /* REBAJE FIJO */
+        .rebaje-fijo {
+            background: var(--bg-tertiary);
             padding: 12px;
-            font-size: 16px;
-            background: var(--bg-secondary);
-            color: var(--text-primary);
-            border: 1px solid var(--border-color);
             border-radius: 6px;
+            margin-bottom: 15px;
+            text-align: center;
+            font-weight: bold;
+            border-left: 4px solid var(--success-color);
         }
-        
+
+        /* BOTONES PRINCIPALES */
         .botones-compactos {
             display: flex;
-            gap: 8px;
+            flex-direction: column;
+            gap: 10px;
             margin: 15px 0;
         }
-        
-        .botones-compactos button {
-            flex: 1;
-            padding: 14px 10px;
-            font-size: 14px;
+
+        .boton-principal {
+            padding: 16px;
+            font-size: 16px;
             background: var(--accent-primary);
             color: var(--text-primary);
             border: none;
             border-radius: 6px;
             cursor: pointer;
-            transition: background 0.3s;
-        }
-        
-        /* Efecto neón al hacer hover en botones principales */
-        .botones-compactos button {
-            position: relative;
-            overflow: hidden;
             transition: all 0.3s;
+            font-weight: bold;
+            width: 100%;
         }
 
-       .botones-compactos button:hover {
-            border: 2px solid var(--accent-primary);
-            box-shadow: 0 0 15px var(--accent-primary);
+        .boton-principal:hover {
+            background: var(--accent-primary);
+            filter: brightness(1.1);
+            transform: translateY(-2px);
         }
 
-        /* Efectos específicos por tema en hover */
-        .tema-tron .botones-compactos button:hover {
-            border: 2px solid #00f3ff;
-            box-shadow: 0 0 20px #00f3ff;
+        .boton-principal:active {
+            transform: translateY(0);
         }
 
-        .tema-batman .botones-compactos button:hover {
-            border: 2px solid #ffff00;
-            box-shadow: 0 0 20px #ffff00;
-       }
-
-       .tema-fundicion .botones-compactos button:hover {
-           border: 2px solid #ff4444;
-           box-shadow: 0 0 20px #ff4444;
-       }
-
-       .tema-starwars .botones-compactos button:hover {
-           border: 2px solid #9966cc;
-           box-shadow: 0 0 20px #9966cc;
-       }
-
+        /* Botones PDF */
         .botones-pdf {
             display: flex;
             gap: 8px;
@@ -340,6 +383,7 @@
             filter: brightness(1.1);
         }
         
+        /* Resultados */
         .item-mini {
             background: var(--bg-tertiary);
             padding: 12px;
@@ -369,6 +413,7 @@
             font-weight: bold;
             text-align: center;
             transition: background 0.3s;
+            margin-top: 10px;
         }
         
         .acordeon-cabecera:hover {
@@ -420,23 +465,8 @@
             margin: 10px 0;
             border-left: 4px solid #f59e0b;
         }
-        
-        .switch {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            margin: 8px 0;
-        }
 
-        .config-profundidad {
-            background: var(--bg-tertiary);
-            padding: 10px;
-            border-radius: 6px;
-            margin: 10px 0;
-            border-left: 4px solid var(--accent-secondary);
-        }
-
-        /* MODAL PRO - NUEVO */
+        /* MODAL PRO */
         .modal-pro {
             display: none;
             position: fixed;
@@ -476,20 +506,7 @@
             font-weight: bold;
         }
 
-        /* REBAJE FIJO - NUEVO */
-        .rebaje-fijo {
-            background: var(--bg-tertiary);
-            padding: 12px;
-            border-radius: 6px;
-            margin-bottom: 15px;
-            text-align: center;
-            font-weight: bold;
-            border-left: 4px solid var(--success-color);
-        }
-
-        /* ============ TEMAS ÉPICOS ============ */
-
-        /* TEMA TRON */
+        /* ============ TEMAS ============ */
         .tema-tron {
             --bg-primary: #0a0a0a;
             --bg-secondary: #0c0c1a;
@@ -513,7 +530,6 @@
             border-color: var(--accent-primary);
         }
 
-        /* TEMA BATMAN */
         .tema-batman {
             --bg-primary: #0a0a0a;
             --bg-secondary: #1a1a1a;
@@ -530,12 +546,6 @@
             box-shadow: 0 0 15px rgba(255, 255, 0, 0.2);
         }
 
-        .tema-batman .boton-opcion.activo {
-            border: 2px solid #ffff00;
-            box-shadow: 0 0 10px #ffff00;
-        }
-
-        /* TEMA FUNDICIÓN */
         .tema-fundicion {
             --bg-primary: #1a0a0a;
             --bg-secondary: #2a0a0a;
@@ -548,11 +558,6 @@
             --success-color: #ffaa00;
         }
 
-        .tema-fundicion .boton-opcion.activo {
-            background: linear-gradient(45deg, #8b0000, #ff4444);
-        }
-
-        /* TEMA STAR WARS */
         .tema-starwars {
             --bg-primary: #1a1a2e;
             --bg-secondary: #16213e;
@@ -565,73 +570,44 @@
             --success-color: #66ff99;
         }
 
-        .tema-starwars .container {
-            backdrop-filter: blur(5px);
+        /* CERTIFICADO */
+        #certificado {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.85);
+            z-index: 9999;
+            padding: 20px;
+            align-items: center;
+            justify-content: center;
         }
 
-        .tema-starwars .boton-opcion.activo {
-            background: linear-gradient(45deg, #4a2a4a, #9966cc);
+        .certificado-contenido {
+            background: linear-gradient(135deg, #1a1a1a, #2d2d2d);
+            padding: 25px;
+            border-radius: 15px;
+            max-width: 400px;
+            width: 90%;
+            border: 2px solid #ff6b35;
+            box-shadow: 0 0 30px rgba(255,107,53,0.3);
         }
 
-        /* ============ BOTONES UNIFICADOS ============ */
-        .btn-unificado {
-               background: var(--bg-tertiary) !important;
-               color: var(--text-secondary) !important;
-               border: 2px solid transparent !important;
-               border-radius: 6px !important;
-               padding: 14px 12px !important;
-               font-size: 14px !important;
-               font-weight: bold !important;
-               cursor: pointer !important;
-               transition: all 0.3s ease !important;
-               text-align: center !important;
-               width: 100% !important;
-               margin: 2px 0 !important;
+        /* Botón de instalación - Añadido: Oculto por defecto */
+        #boton-instalar-app {
+            display: none !important;
         }
 
-       .btn-unificado:hover,
-       .btn-unificado.activo {
-              background: var(--bg-tertiary) !important;
-              color: var(--text-primary) !important;
-              border: 2px solid var(--accent-primary) !important;
-              box-shadow: 0 0 15px var(--accent-primary) !important;
-              text-shadow: 0 0 10px var(--accent-primary) !important;
+        /* MEDIA QUERIES */
+        @media (min-width: 768px) {
+            .container {
+                max-width: 500px;
+                margin: 0 auto;
+            }
         }
 
-       /* Efectos específicos por tema */
-       .tema-tron .btn-unificado:hover,
-       .tema-tron .btn-unificado.activo {
-               border: 2px solid #00f3ff !important;
-               box-shadow: 0 0 20px #00f3ff !important;
-               text-shadow: 0 0 10px #00f3ff !important;
-        }
-
-       .tema-batman .btn-unificado:hover,
-       .tema-batman .btn-unificado.activo {
-               border: 2px solid #ffff00 !important;
-               box-shadow: 0 0 20px #ffff00 !important;
-               text-shadow: 0 0 10px #ffff00 !important;
-        }
-
-       .tema-fundicion .btn-unificado:hover,
-       .tema-fundicion .btn-unificado.activo {
-               border: 2px solid #ff4444 !important;
-               box-shadow: 0 0 20px #ff4444 !important;
-               text-shadow: 0 0 10px #ff4444 !important;
-        }
-
-       .tema-starwars .btn-unificado:hover,
-       .tema-starwars .btn-unificado.activo {
-               border: 2px solid #9966cc !important;
-               box-shadow: 0 0 20px #9966cc !important;
-               text-shadow: 0 0 10px #9966cc !important;
-       }
-
-       /* Para el acordeón-cabecera específicamente */
-       .acordeon-cabecera.btn-unificado {
-               margin-top: 10px !important;
-       }
-        
         @media print {
             body { 
                 background: white !important; 
@@ -646,7 +622,7 @@
                 margin: 0;
             }
             .theme-selector, .selector-principal, .botones-compactos, .botones-pdf, 
-            .configuracion, .controles-compactos, .selectores-categoria, 
+            .configuracion, .selectores-categoria, 
             .acordeon-cabecera, .modal-pro { 
                 display: none !important; 
             }
@@ -675,13 +651,16 @@
     <div class="container">
         <h2>CALCULADORA DE CHAPAS PARA FRENTES</h2>
         
-        <!-- Selector de Temas Épicos -->
+        <!-- Menú de estética desplegable -->
         <div class="theme-selector">
-            <button class="theme-btn active" data-tema="actual">ACTUAL</button>
-            <button class="theme-btn" data-tema="tron">TRON</button>
-            <button class="theme-btn" data-tema="batman">BATMAN</button>
-            <button class="theme-btn" data-tema="fundicion">FUNDICIÓN</button>
-            <button class="theme-btn" data-tema="starwars">STAR WARS</button>
+            <button class="theme-menu-btn" id="themeMenuBtn">APARIENCIA: ACTUAL</button>
+            <div class="theme-dropdown" id="themeDropdown">
+                <button class="theme-option active" data-tema="actual">ACTUAL</button>
+                <button class="theme-option" data-tema="tron">TRON</button>
+                <button class="theme-option" data-tema="batman">BATMAN</button>
+                <button class="theme-option" data-tema="fundicion">FUNDICIÓN</button>
+                <button class="theme-option" data-tema="starwars">STAR WARS</button>
+            </div>
         </div>
         
         <!-- Selector de Opción con Botones -->
@@ -713,15 +692,27 @@
         
         <!-- OPCIÓN A: Frente Gabinete -->
         <div id="opcion-A" class="opcion-contenido activo">
-            <!-- REBAJE FIJO 0.03m - NUEVO -->
+            <!-- REBAJE FIJO -->
             <div class="rebaje-fijo">
-                ⚙️ Rebaje fijo: <strong>0.03m</strong> | Desarrollo: <strong>0.19m</strong>
+                Rebaje fijo: <strong>0.03m</strong> | Desarrollo: <strong>0.19m</strong>
             </div>
             
-            <div class="controles-compactos">
-                <input type="number" id="altoTotalA" placeholder="Alto total (m)" step="0.01" min="0">
-                <input type="number" id="anchoTotalA" placeholder="Ancho total (m)" step="0.01" min="0">
-                <input type="number" id="cantPuertasA" placeholder="Cant. puertas" min="1">
+            <!-- CAMPOS VERTICALES - MODIFICADOS -->
+            <div class="campos-verticales">
+                <div class="campo-vertical">
+                    <label>Alto total (metros)</label>
+                    <input type="number" id="altoTotalA" placeholder="Ej: 1.80" step="0.01" min="0">
+                </div>
+                
+                <div class="campo-vertical">
+                    <label>Ancho total (metros)</label>
+                    <input type="number" id="anchoTotalA" placeholder="Ej: 2.40" step="0.01" min="0">
+                </div>
+                
+                <div class="campo-vertical">
+                    <label>Cantidad de puertas</label>
+                    <input type="number" id="cantPuertasA" placeholder="Ej: 2" min="1">
+                </div>
             </div>
             
             <div class="configuracion">
@@ -737,15 +728,15 @@
         <!-- OPCIÓN B: Marco Puerta (BLOQUEADA) -->
         <div id="opcion-B" class="opcion-contenido">
             <div style="text-align: center; padding: 30px; color: var(--text-secondary);">
-                <h3>🔒 FUNCIÓN PRO</h3>
+                <h3>FUNCIÓN PRO</h3>
                 <p>Esta función está disponible en la versión completa.</p>
                 <div style="margin-top: 20px; padding: 15px; background: rgba(255,68,68,0.1); border-radius: 8px;">
                     <strong>Contactame para acceder a todas las funciones:</strong>
                     <p style="margin-top: 10px; color: var(--accent-primary);">
-                        • Marcos puerta personalizados<br>
-                        • Múltiples opciones de rebaje<br>
-                        • Cálculos avanzados<br>
-                        • Sin límites de uso
+                        Marcos puerta personalizados<br>
+                        Múltiples opciones de rebaje<br>
+                        Cálculos avanzados<br>
+                        Sin límites de uso
                     </p>
                 </div>
             </div>
@@ -754,27 +745,27 @@
         <!-- Mensaje de éxito -->
         <div class="mensaje-exito" id="mensajeExito"></div>
         
-        <!-- Botones principales (ESTILO UNIFICADO) -->
-       <div class="botones-compactos">
-              <button class="btn-unificado" onclick="calcularChapas()">CALCULAR CHAPAS</button>
-              <button class="btn-unificado" onclick="limpiarCalculadora()">LIMPIAR TODO</button>
-      </div>
+        <!-- Botones principales -->
+        <div class="botones-compactos">
+            <button class="boton-principal" onclick="calcularChapas()">CALCULAR CHAPAS</button>
+            <button class="boton-principal" onclick="limpiarCalculadora()" style="background: var(--bg-tertiary); color: var(--text-secondary);">LIMPIAR TODO</button>
+        </div>
 
         <!-- Botones PDF e Imprimir -->
         <div class="botones-pdf">
             <button onclick="imprimirResultados()">IMPRIMIR / GUARDAR PDF</button>
         </div>
 
-        <!-- Botón para ver certificado (opcional) -->
+        <!-- Botón para ver certificado -->
         <div class="botones-pdf" style="margin-top: 5px;">
            <button onclick="mostrarCertificado()" style="background: #f59e0b; font-size: 11px;">
-            📄 VER CERTIFICADO DE USO
+            VER CERTIFICADO DE USO
            </button>
         </div>
         
         <!-- Resultados -->
         <div class="acordeon">
-            <div class="acordeon-cabecera btn-unificado" onclick="toggleAcordeon('resultadosChapas')">
+            <div class="acordeon-cabecera" onclick="toggleAcordeon('resultadosChapas')">
                   VER RESULTADOS COMPLETOS
             </div>
             <div class="acordeon-contenido" id="resultadosChapas"></div>
@@ -784,7 +775,7 @@
     <!-- Modal PRO -->
     <div class="modal-pro" id="modalPro">
        <div class="modal-contenido">
-          <h3>⚡ FUNCIÓN PRO</h3>
+          <h3>FUNCIÓN PRO</h3>
           <p>La opción <strong>MARCO PUERTA</strong> está disponible en la versión completa.</p>
           <p style="margin: 15px 0; font-size: 13px; color: var(--text-secondary);">
               Contactame para acceder a todas las funciones avanzadas.
@@ -793,94 +784,129 @@
        </div>
     </div>
 
-    <!-- CERTIFICADO DE USO - NUEVO (CORREGIDO: FUERA DEL MODAL) -->
-    <div id="certificado" style="display: none;">
-       <div style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
-                   background: rgba(0,0,0,0.85); z-index: 9999; padding: 20px; display: flex; align-items: center; justify-content: center;">
-          <div style="background: linear-gradient(135deg, #1a1a1a, #2d2d2d); padding: 25px; border-radius: 15px; 
-                      max-width: 400px; width: 90%; border: 2px solid #ff6b35; box-shadow: 0 0 30px rgba(255,107,53,0.3);">
-              <h3 style="color: #ff6b35; text-align: center; margin-bottom: 15px; font-size: 20px;">📜 CERTIFICADO DE USO</h3>
+    <!-- CERTIFICADO DE USO -->
+    <div id="certificado">
+       <div class="certificado-contenido">
+           <h3 style="color: #ff6b35; text-align: center; margin-bottom: 15px; font-size: 20px;">CERTIFICADO DE USO</h3>
             
-              <div style="background: rgba(255,107,53,0.1); padding: 15px; border-radius: 10px; margin-bottom: 15px;">
-                   <p style="margin: 8px 0;"><strong>Calculadora de Chapas para Frentes</strong></p>
-                   <p style="margin: 8px 0;">Versión: <span style="color: #ff6b35; font-weight: bold;">BÁSICA GRATUITA</span></p>
-                   <p style="margin: 8px 0;">Desarrollador: <strong>[EL HERRERO]</strong></p>
-                   <p style="margin: 8px 0;">Contacto: <strong>[elherrero12@gmail.com]</strong></p>
-              </div>
+           <div style="background: rgba(255,107,53,0.1); padding: 15px; border-radius: 10px; margin-bottom: 15px;">
+               <p style="margin: 8px 0;"><strong>Calculadora de Chapas para Frentes</strong></p>
+               <p style="margin: 8px 0;">Versión: <span style="color: #ff6b35; font-weight: bold;">BÁSICA GRATUITA</span></p>
+               <p style="margin: 8px 0;">Desarrollador: <strong>[EL HERRERO]</strong></p>
+               <p style="margin: 8px 0;">Contacto: <strong>[elherrero12@gmail.com]</strong></p>
+           </div>
             
-              <hr style="border-color: #444; margin: 15px 0;">
+           <hr style="border-color: #444; margin: 15px 0;">
             
-              <div style="margin-bottom: 15px;">
-                  <p style="color: #10b981; font-weight: bold;">✔ PERMITIDO:</p>
-                  <ul style="padding-left: 20px; margin: 10px 0; font-size: 14px;">
-                      <li>Uso personal y educativo</li>
-                      <li>Modificar para uso propio</li>
-                      <li>Compartir con otros herreros</li>
-                 </ul>
-              </div>
+           <div style="margin-bottom: 15px;">
+               <p style="color: #10b981; font-weight: bold;">PERMITIDO:</p>
+               <ul style="padding-left: 20px; margin: 10px 0; font-size: 14px;">
+                   <li>Uso personal y educativo</li>
+                   <li>Modificar para uso propio</li>
+                   <li>Compartir con otros herreros</li>
+               </ul>
+           </div>
             
-              <div style="margin-bottom: 20px;">
-                  <p style="color: #dc2626; font-weight: bold;">❌ PROHIBIDO:</p>
-                  <ul style="padding-left: 20px; margin: 10px 0; font-size: 14px;">
-                      <li>Uso comercial sin autorización</li>
-                      <li>Revender o cobrar por esta versión</li>
-                      <li>Redistribuir como producto propio</li>
-                  </ul>
-              </div>
+           <div style="margin-bottom: 20px;">
+               <p style="color: #dc2626; font-weight: bold;">PROHIBIDO:</p>
+               <ul style="padding-left: 20px; margin: 10px 0; font-size: 14px;">
+                   <li>Uso comercial sin autorización</li>
+                   <li>Revender o cobrar por esta versión</li>
+                   <li>Redistribuir como producto propio</li>
+               </ul>
+           </div>
             
-              <hr style="border-color: #444; margin: 15px 0;">
+           <hr style="border-color: #444; margin: 15px 0;">
             
-              <div style="background: rgba(59,130,246,0.1); padding: 12px; border-radius: 8px; margin-bottom: 20px;">
-                  <p style="font-weight: bold; color: #3b82f6;">⚡ VERSIÓN PRO DISPONIBLE</p>
-                  <p style="font-size: 13px; margin-top: 5px;">Con funciones avanzadas, personalización y soporte directo.</p>
-                  <p style="font-size: 13px; margin-top: 5px;">Contactar al desarrollador para acceso.</p>
-            </div>
+           <div style="background: rgba(59,130,246,0.1); padding: 12px; border-radius: 8px; margin-bottom: 20px;">
+               <p style="font-weight: bold; color: #3b82f6;">VERSIÓN PRO DISPONIBLE</p>
+               <p style="font-size: 13px; margin-top: 5px;">Con funciones avanzadas, personalización y soporte directo.</p>
+               <p style="font-size: 13px; margin-top: 5px;">Contactar al desarrollador para acceso.</p>
+           </div>
             
-            <button onclick="cerrarCertificado()" 
-                    style="width: 100%; padding: 12px; background: linear-gradient(to right, #ff6b35, #ff8c35); 
-                           color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: bold;">
-                ENTENDIDO Y ACEPTO
-            </button>
+           <button onclick="cerrarCertificado()" 
+                   style="width: 100%; padding: 12px; background: linear-gradient(to right, #ff6b35, #ff8c35); 
+                          color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: bold;">
+               ENTENDIDO Y ACEPTO
+           </button>
             
-            <p style="text-align: center; font-size: 11px; color: #888; margin-top: 15px;">
-                Este certificado se muestra solo la primera vez.
-            </p>
-        </div>
+           <p style="text-align: center; font-size: 11px; color: #888; margin-top: 15px;">
+               Este certificado se muestra solo la primera vez.
+           </p>
+       </div>
     </div>
-</div>
+
     <script>
         // =============================================
-        // SISTEMA DE TEMAS PERSISTENTE
+        // SISTEMA DE TEMAS CON MENÚ DESPLEGABLE
         // =============================================
-        document.querySelectorAll('.theme-btn').forEach(btn => {
-            btn.addEventListener('click', function() {
-                document.querySelectorAll('.theme-btn').forEach(b => b.classList.remove('active'));
+        const themeMenuBtn = document.getElementById('themeMenuBtn');
+        const themeDropdown = document.getElementById('themeDropdown');
+        const themeOptions = document.querySelectorAll('.theme-option');
+
+        // Alternar menú desplegable
+        themeMenuBtn.addEventListener('click', function(e) {
+            e.stopPropagation();
+            themeDropdown.classList.toggle('show');
+            themeMenuBtn.classList.toggle('active');
+        });
+
+        // Cerrar menú al hacer clic fuera
+        document.addEventListener('click', function(e) {
+            if (!themeMenuBtn.contains(e.target) && !themeDropdown.contains(e.target)) {
+                themeDropdown.classList.remove('show');
+                themeMenuBtn.classList.remove('active');
+            }
+        });
+
+        // Cambiar tema
+        themeOptions.forEach(option => {
+            option.addEventListener('click', function() {
+                const tema = this.dataset.tema;
+                
+                // Actualizar opción activa
+                themeOptions.forEach(opt => opt.classList.remove('active'));
                 this.classList.add('active');
                 
-                const tema = this.dataset.tema;
+                // Cambiar tema
                 document.body.className = `tema-${tema}`;
                 
+                // Actualizar texto del botón
+                themeMenuBtn.textContent = `APARIENCIA: ${this.textContent}`;
+                
+                // Guardar preferencia
                 localStorage.setItem('tema-calculadora', tema);
+                
+                // Cerrar menú
+                themeDropdown.classList.remove('show');
+                themeMenuBtn.classList.remove('active');
             });
         });
 
         // Cargar tema guardado
         const temaGuardado = localStorage.getItem('tema-calculadora') || 'actual';
-        document.querySelector(`[data-tema="${temaGuardado}"]`).classList.add('active');
         document.body.className = `tema-${temaGuardado}`;
+        
+        // Actualizar interfaz con tema cargado
+        const temaActivo = document.querySelector(`.theme-option[data-tema="${temaGuardado}"]`);
+        if (temaActivo) {
+            temaActivo.classList.add('active');
+            themeMenuBtn.textContent = `APARIENCIA: ${temaActivo.textContent}`;
+        }
 
         // =============================================
         // VALIDACIÓN CONTRA NEGATIVOS Y DECIMALES
         // =============================================
         document.addEventListener('DOMContentLoaded', function() {
-            // Prevenir valores negativos
+            // MODIFICADO: Eliminar el valor por defecto de cantidad de puertas
+            document.getElementById('cantPuertasA').value = '';
+            
             document.querySelectorAll('input[type="number"]').forEach(input => {
                 input.addEventListener('input', function() {
                     if (this.value.startsWith('-')) {
                         this.value = this.value.replace('-', '');
                     }
                     
-                    // Limitar a 2 decimales
                     if (this.value.includes('.')) {
                         const partes = this.value.split('.');
                         if (partes[1].length > 2) {
@@ -889,13 +915,12 @@
                     }
                 });
                 
-                // Validar al perder foco
                 input.addEventListener('blur', function() {
                     if (this.value.trim() !== '') {
                         const valor = parseFloat(this.value);
                         if (isNaN(valor) || valor < 0) {
                             this.value = '';
-                            mostrarMensaje('❌ Ingresá un número válido (mayor o igual a 0)');
+                            mostrarMensaje('Ingresá un número válido (mayor o igual a 0)');
                         }
                     }
                 });
@@ -907,18 +932,13 @@
         // =============================================
         document.querySelectorAll('.boton-opcion').forEach(boton => {
             boton.addEventListener('click', function() {
-                // Si es la opción B (bloqueada), mostrar modal
                 if (this.classList.contains('pro-bloqueado')) {
                     mostrarModalPro();
                     return;
                 }
                 
-                // Si es la opción A, cambiar normalmente
                 document.querySelectorAll('.boton-opcion').forEach(b => {
                     b.classList.remove('activo');
-                    if (!b.classList.contains('pro-bloqueado')) {
-                        b.classList.remove('activo');
-                    }
                 });
                 this.classList.add('activo');
                 
@@ -938,31 +958,7 @@
         function cerrarModalPro() {
             document.getElementById('modalPro').style.display = 'none';
         }
-        // =============================================     
-        // CERTIFICADO DE USO (solo primera vez)
-        // =============================================
-        function mostrarCertificado() {
-            document.getElementById('certificado').style.display = 'block';
-        }
 
-        function cerrarCertificado() {
-            document.getElementById('certificado').style.display = 'none';
-            localStorage.setItem('certificado_visto', 'true');
-        }
-
-        // Mostrar certificado solo primera vez al cargar
-        document.addEventListener('DOMContentLoaded', function() {
-           if (!localStorage.getItem('certificado_visto')) {
-               // Esperar 3 segundos para que cargue todo
-               setTimeout(() => {
-                  document.getElementById('certificado').style.display = 'block';
-                   }, 3000);
-           }
-        });
-
-        // También agregar botón para ver certificado cuando quieran
-        // (Podés agregar un botón en la interfaz si querés)
-        // Cerrar modal al hacer clic fuera
         document.getElementById('modalPro').addEventListener('click', function(e) {
             if (e.target === this) {
                 cerrarModalPro();
@@ -970,10 +966,30 @@
         });
 
         // =============================================
-        // CONSTANTES Y CLASE CALCULADORA (MODIFICADA)
+        // CERTIFICADO DE USO
+        // =============================================
+        function mostrarCertificado() {
+            document.getElementById('certificado').style.display = 'flex';
+        }
+
+        function cerrarCertificado() {
+            document.getElementById('certificado').style.display = 'none';
+            localStorage.setItem('certificado_visto', 'true');
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+           if (!localStorage.getItem('certificado_visto')) {
+               setTimeout(() => {
+                  document.getElementById('certificado').style.display = 'flex';
+               }, 3000);
+           }
+        });
+
+        // =============================================
+        // CONSTANTES Y CLASE CALCULADORA
         // =============================================
         const REBAJE_FIJO = 0.03;
-        const DESARROLLO_FIJO = 0.19; // 0.16 + 0.03
+        const DESARROLLO_FIJO = 0.19;
 
         class CalculadoraChapas {
             constructor(precioKg = 7000, precioPintura = 18000) {
@@ -987,7 +1003,7 @@
             }
             
             calcularDesarrolloMarcoA() {
-                return DESARROLLO_FIJO; // Fijo 0.19m
+                return DESARROLLO_FIJO;
             }
             
             calcularProfundidadPuerta() {
@@ -1033,28 +1049,21 @@
             _calcularResultadosFinales(m2Totales, datos) {
                 try {
                     const pesoPorM2 = this.pesosChapa[datos.tipoChapa];
-                    
-                    // 🚨 CAMBIO 1: SIN 10% DESPERDICIO
-                    const kgChapa = m2Totales * pesoPorM2; // ← Quitamos * 1.1
-                    
+                    const kgChapa = m2Totales * pesoPorM2;
                     const costoChapa = kgChapa * this.precioBaseKg;
                     
-                    // Cálculo pintura
                     const m2Pintura = m2Totales * 2;
                     const litrosPintura = Math.ceil((m2Pintura * 2) / 10);
                     const costoPintura = litrosPintura * this.precioPinturaLitro;
                     const combinacionLatas = this.calcularLatasPintura(litrosPintura);
                     
-                    // 🚨 CAMBIO 2: SIN 30% MATERIALES EXTRAS
-                    const costoMateriales = costoChapa + costoPintura; // ← Quitamos * 1.3
-                    
-                    // 🚨 CAMBIO 3: MANO DE OBRA = MATERIAL × 1 (TOTAL × 2)
-                    const costoFinalSinFactura = costoMateriales * 2; // ← Antes: totalConMateriales × 2
+                    const costoMateriales = costoChapa + costoPintura;
+                    const costoFinalSinFactura = costoMateriales * 2;
                     const costoFinalConFactura = datos.conFactura ? costoFinalSinFactura * 1.15 : costoFinalSinFactura;
                     
                     return {
                         m2Totales: Number(m2Totales.toFixed(4)),
-                        kgChapa: Number(kgChapa.toFixed(2)), // ← Cambiado de kgConDesperdicio
+                        kgChapa: Number(kgChapa.toFixed(2)),
                         rebajeUsado: REBAJE_FIJO,
                         desarrolloUsado: DESARROLLO_FIJO,
                         precioKgUsado: this.precioBaseKg,
@@ -1100,33 +1109,24 @@
         let contadorPresupuestos = localStorage.getItem('contadorPresupuestos') || 1;
 
         // =============================================
-        // MANEJAR PRECIOS (actualizar + guardar)
+        // MANEJAR PRECIOS
         // =============================================
-
         function actualizarCalculadora() {
             const precioKg = parseFloat(document.getElementById('precioKg').value) || 7000;
             const precioPintura = parseFloat(document.getElementById('precioPintura').value) || 18000;
             calculadoraChapas = new CalculadoraChapas(precioKg, precioPintura);
         }
 
-        // Cuando cambia precio Kg
         document.getElementById('precioKg').addEventListener('change', function() {
             if (this.value) {
-                // Guardar en localStorage
                 localStorage.setItem('precioKg', this.value);
-                console.log('💰 Precio kg guardado:', this.value);
-                // Actualizar calculadora
                 actualizarCalculadora();
             }
         });
 
-        // Cuando cambia precio pintura
         document.getElementById('precioPintura').addEventListener('change', function() {
             if (this.value) {
-                // Guardar en localStorage
                 localStorage.setItem('precioPintura', this.value);
-                console.log('🎨 Precio pintura guardado:', this.value);
-                // Actualizar calculadora
                 actualizarCalculadora();
             }
         });
@@ -1138,19 +1138,16 @@
     
             if (precioKgGuardado) {
                 document.getElementById('precioKg').value = precioKgGuardado;
-                console.log('💰 Precio kg cargado:', precioKgGuardado);
             }
     
             if (precioPinturaGuardado) {
                 document.getElementById('precioPintura').value = precioPinturaGuardado;
-                console.log('🎨 Precio pintura cargado:', precioPinturaGuardado);
             }
     
-            // Actualizar calculadora con los precios cargados
             actualizarCalculadora();
         });
 
-        //=================================
+        // =============================================
         // FUNCIONES DE INTERFAZ
         // =============================================
         function mostrarMensaje(mensaje) {
@@ -1170,16 +1167,13 @@
         function limpiarCalculadora() {
             document.querySelectorAll('input[type="number"]').forEach(input => {
                 if (!input.id.includes('precio')) {
-                    if (input.id === 'cantPuertasA') {
-                        input.value = '1';
-                    } else {
-                        input.value = '';
-                    }
+                    // MODIFICADO: Limpiar todos los campos sin valores por defecto
+                    input.value = '';
                 }
             });
             document.getElementById('resultadosChapas').innerHTML = '';
             document.getElementById('resultadosChapas').style.display = 'none';
-            mostrarMensaje('🔄 Calculadora limpiada');
+            mostrarMensaje('Calculadora limpiada');
         }
 
         function imprimirResultados() {
@@ -1200,31 +1194,29 @@
                 const opcionActiva = document.querySelector('.boton-opcion.activo').dataset.opcion;
                 const conFactura = document.getElementById('conFactura').checked;
 
-                // Validar que sea la opción A (única permitida)
                 if (opcionActiva !== 'A') {
                     mostrarModalPro();
                     return;
                 }
 
-                // Obtener y validar valores
                 const altoTotal = parseFloat(document.getElementById('altoTotalA').value);
                 const anchoTotal = parseFloat(document.getElementById('anchoTotalA').value);
                 const cantPuertas = parseInt(document.getElementById('cantPuertasA').value);
                 const tipoChapa = document.getElementById('tipoChapaA').value;
 
-                // Validaciones básicas
+                // MODIFICADO: Validación más estricta para campos vacíos
                 if (!altoTotal || !anchoTotal || !cantPuertas) {
-                    mostrarMensaje('❌ Completá todos los campos obligatorios');
+                    mostrarMensaje('Completá todos los campos obligatorios');
                     return;
                 }
 
                 if (altoTotal <= 0 || anchoTotal <= 0) {
-                    mostrarMensaje('❌ Alto y ancho deben ser mayores a 0');
+                    mostrarMensaje('Alto y ancho deben ser mayores a 0');
                     return;
                 }
 
                 if (cantPuertas < 1) {
-                    mostrarMensaje('❌ La cantidad de puertas debe ser al menos 1');
+                    mostrarMensaje('La cantidad de puertas debe ser al menos 1');
                     return;
                 }
 
@@ -1239,22 +1231,22 @@
                 const resultados = calculadoraChapas.calcularOpcionA(datos);
 
                 if (!resultados) {
-                    mostrarMensaje('❌ Error en los cálculos');
+                    mostrarMensaje('Error en los cálculos');
                     return;
                 }
 
                 mostrarResultados(resultados);
                 contadorPresupuestos++;
                 localStorage.setItem('contadorPresupuestos', contadorPresupuestos);
-                mostrarMensaje(`✅ Frente gabinete calculado (Rebaje: 0.03m)`);
+                mostrarMensaje(`Frente gabinete calculado (Rebaje: 0.03m)`);
 
             } catch (error) {
-                mostrarMensaje(`❌ Error: ${error.message}`);
+                mostrarMensaje(`Error: ${error.message}`);
             }
         }
 
         // =============================================
-        // MOSTRAR RESULTADOS
+        // MOSTRAR RESULTADOS CON AUTO-SCROLL
         // =============================================
         function mostrarResultados(resultados) {
             const contenedor = document.getElementById('resultadosChapas');
@@ -1331,196 +1323,137 @@
                        <span>$${resultados.costoFinalSinFactura.toLocaleString()}</span>
                   </div>`;
 
-          if (resultados.conFactura) {
-             html += `
-                 <div class="resumen-linea">
-                     <span>+ 15% factura:</span>
-                     <span>$${resultados.costoFinalConFactura.toLocaleString()}</span>
-                 </div>`;
-          }
+            if (resultados.conFactura) {
+                html += `
+                    <div class="resumen-linea">
+                        <span>+ 15% factura:</span>
+                        <span>$${resultados.costoFinalConFactura.toLocaleString()}</span>
+                    </div>`;
+            }
 
-          html += `
-                  <div class="resumen-linea" style="border-top: 2px solid var(--accent-primary); padding-top: 8px; font-weight: bold;">
-                      <span>TOTAL FINAL:</span>
-                      <span>$${(resultados.conFactura ? resultados.costoFinalConFactura : resultados.costoFinalSinFactura).toLocaleString()}</span>
-                  </div>
-              </div>
+            html += `
+                    <div class="resumen-linea" style="border-top: 2px solid var(--accent-primary); padding-top: 8px; font-weight: bold;">
+                        <span>TOTAL FINAL:</span>
+                        <span>$${(resultados.conFactura ? resultados.costoFinalConFactura : resultados.costoFinalSinFactura).toLocaleString()}</span>
+                    </div>
+                </div>
         
-              <div class="info-extra" style="margin-top: 15px; text-align: center; font-size: 11px;">
-                 📌 <strong>Versión básica</strong> - Rebaje fijo 0.03m<br>
-                 ⚡ <strong>Versión PRO</strong> disponible con más funciones
-              </div>
+                <div class="info-extra" style="margin-top: 15px; text-align: center; font-size: 11px;">
+                    Versión básica - Rebaje fijo 0.03m<br>
+                    Versión PRO disponible con más funciones
+                </div>
         
-              <!-- CONSIDERACIONES PARA EL CÁLCULO AUTOMÁTICO -->
-              <div style="margin-top: 20px;">
-                  <div class="acordeon-cabecera" onclick="toggleAcordeon('consideracionesAuto')" style="background: #f59e0b; color: #1a1a1a; font-weight: bold; cursor: pointer;">
-                      📊 CONSIDERACIONES PARA EL CÁLCULO AUTOMÁTICO
-                  </div>
-                  <div class="acordeon-contenido" id="consideracionesAuto" style="display: none; background: var(--bg-tertiary); border-left: 4px solid #f59e0b;">
-                      <div style="padding: 15px;">
-                          <strong style="color: #cccccc; display: block; margin-bottom: 10px;">🔩 Cantidad de puertas:</strong>
-                          <ul style="padding-left: 20px; margin: 5px 0 15px 0; font-size: 13px;">
-                              <li>1-2 puertas → 2 frentes de marco</li>
-                              <li>3-4 puertas → 3 frentes de marco (+1 parante central)</li>
-                              <li>5+ puertas → Consultar por diseño especial</li>
-                          </ul>
+                <!-- CONSIDERACIONES PARA EL CÁLCULO AUTOMÁTICO -->
+                <div style="margin-top: 20px;">
+                    <div class="acordeon-cabecera" onclick="toggleAcordeon('consideracionesAuto')" style="background: #f59e0b; color: #1a1a1a; font-weight: bold; cursor: pointer;">
+                        CONSIDERACIONES PARA EL CÁLCULO AUTOMÁTICO
+                    </div>
+                    <div class="acordeon-contenido" id="consideracionesAuto" style="display: none; background: var(--bg-tertiary); border-left: 4px solid #f59e0b;">
+                        <div style="padding: 15px;">
+                            <strong style="color: #cccccc; display: block; margin-bottom: 10px;">Cantidad de puertas:</strong>
+                            <ul style="padding-left: 20px; margin: 5px 0 15px 0; font-size: 13px;">
+                                <li>1-2 puertas → 2 frentes de marco</li>
+                                <li>3-4 puertas → 3 frentes de marco (+1 parante central)</li>
+                                <li>5+ puertas → Consultar por diseño especial</li>
+                            </ul>
                     
-                          <strong style="color: #cccccc; display: block; margin-bottom: 10px;">⚡ Refuerzos Omega:</strong>
-                          <ul style="padding-left: 20px; margin: 5px 0 15px 0; font-size: 13px;">
-                             <li>Hasta 1.5m de alto → 1 refuerzo horizontal</li>
-                             <li>Más de 1.5m de alto → 2 refuerzos horizontales</li>
-                             <li>Para frentes extra altos considerar refuerzos verticales</li>
-                          </ul>
+                            <strong style="color: #cccccc; display: block; margin-bottom: 10px;">Refuerzos Omega:</strong>
+                            <ul style="padding-left: 20px; margin: 5px 0 15px 0; font-size: 13px;">
+                               <li>Hasta 1.5m de alto → 1 refuerzo horizontal</li>
+                               <li>Más de 1.5m de alto → 2 refuerzos horizontales</li>
+                               <li>Para frentes extra altos considerar refuerzos verticales</li>
+                            </ul>
                     
-                          <strong style="color: #cccccc; display: block; margin-bottom: 10px;">🎯 Ajustes prácticos:</strong>
-                          <ul style="padding-left: 20px; margin: 5px 0 15px 0; font-size: 13px;">
-                              <li>Agregar 2-3% extra por cortes y ajustes</li>
-                              <li>Verificar tipo de bisagra para determinar rebaje</li>
-                              <li>Para exteriores, considerar pintura anticorrosiva extra</li>
-                         </ul>
+                            <strong style="color: #cccccc; display: block; margin-bottom: 10px;">Ajustes prácticos:</strong>
+                            <ul style="padding-left: 20px; margin: 5px 0 15px 0; font-size: 13px;">
+                                <li>Agregar 2-3% extra por cortes y ajustes</li>
+                                <li>Verificar tipo de bisagra para determinar rebaje</li>
+                                <li>Para exteriores, considerar pintura anticorrosiva extra</li>
+                           </ul>
                     
-                         <p style="font-size: 12px; color: #888; text-align: center; font-style: italic; margin-top: 15px; border-top: 1px solid #444; padding-top: 10px;">
-                            Estas consideraciones están basadas en experiencia práctica de taller y afectan el cálculo automático.
-                         </p>
-                     </div>
-                 </div>
-             </div>`;
+                           <p style="font-size: 12px; color: #888; text-align: center; font-style: italic; margin-top: 15px; border-top: 1px solid #444; padding-top: 10px;">
+                              Estas consideraciones están basadas en experiencia práctica de taller y afectan el cálculo automático.
+                           </p>
+                       </div>
+                   </div>
+               </div>`;
     
-        contenedor.innerHTML = html;
-        contenedor.style.display = 'block';      
-        }
-        
-       // =============================================
-       // INICIALIZACIÓN + PWA
-       // =============================================
-
-       // 1. INICIALIZACIÓN
-       document.addEventListener('DOMContentLoaded', function() {
-           console.log('Calculadora de Frentes - Versión Influencer/Herreros cargada');
-           console.log('Características: Rebaje fijo 0.03m, sin desperdicio 10%, sin materiales 30%');
-       });
-
-       // 2. REGISTRAR SERVICE WORKER
-       if ('serviceWorker' in navigator) {
-           window.addEventListener('load', function() {
-               navigator.serviceWorker.register('/sw.js')
-                   .then(function(registration) {
-                       console.log('✅ Service Worker registrado:', registration.scope);
-                   })
-                   .catch(function(error) {
-                     console.log('❌ Error registrando Service Worker:', error);
-                });
-            });
+            contenedor.innerHTML = html;
+            contenedor.style.display = 'block';
+            
+            // AUTO-SCROLL a resultados después de calcular
+            setTimeout(() => {
+                const resultadosElement = document.getElementById('resultadosChapas');
+                if (resultadosElement) {
+                    resultadosElement.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            }, 300);
         }
 
-// =============================================
-// BOTÓN DE INSTALACIÓN MEJORADO
-// =============================================
-
-let botonInstalar = null;
-
-// Función para verificar si YA está instalada
-function verificarSiYaEstaInstalada() {
-    // Método 1: display-mode (estándar)
-    if (window.matchMedia('(display-mode: standalone)').matches) {
-        console.log('📱 Ya está instalada (display-mode)');
-        return true;
-    }
-    
-    // Método 2: navigator.standalone (iOS)
-    if (window.navigator.standalone === true) {
-        console.log('📱 Ya está instalada (iOS)');
-        return true;
-    }
-    
-    // Método 3: localStorage (nuestra marca)
-    if (localStorage.getItem('pwa_instalada') === 'true') {
-        console.log('📱 Marcada como instalada en localStorage');
-        return true;
-    }
-    
-    return false;
-    }
-
-    function crearBotonInstalacion() {
-    // Si ya está instalada, NO crear botón
-    if (verificarSiYaEstaInstalada()) {
-        console.log('✅ Ya instalada, sin botón');
-        return;
-    }
-    
-    // Si ya existe botón, no crear otro
-    if (botonInstalar) return;
-    
-    // Crear botón
-    botonInstalar = document.createElement('button');
-    botonInstalar.innerHTML = '📱 INSTALAR APP';
-    botonInstalar.id = 'boton-instalar-app';
-    
-    // Estilo
-    botonInstalar.style.cssText = `
-        position: fixed;
-        bottom: 80px;
-        right: 20px;
-        padding: 14px 20px;
-        background: #ff6b35;
-        color: white;
-        border: none;
-        border-radius: 25px;
-        font-weight: bold;
-        font-size: 15px;
-        cursor: pointer;
-        z-index: 9999;
-        box-shadow: 0 4px 15px rgba(255, 107, 53, 0.7);
-        display: block;
-    `;
-    
-    // Acción al tocar
-    botonInstalar.onclick = function() {
-        if (window.deferredPrompt) {
-            window.deferredPrompt.prompt();
-            window.deferredPrompt.userChoice.then(function(choiceResult) {
-                if (choiceResult.outcome === 'accepted') {
-                    // MARCA como instalada
-                    localStorage.setItem('pwa_instalada', 'true');
-                    botonInstalar.style.display = 'none';
-                    console.log('✅ Marcada como instalada');
+        // =============================================
+        // INICIALIZACIÓN
+        // =============================================
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('Calculadora de Frentes - Versión Profesional cargada');
+            
+            // Mostrar opción A por defecto
+            document.querySelectorAll('.boton-opcion').forEach(boton => {
+                if (boton.dataset.opcion === 'A') {
+                    boton.classList.add('activo');
                 }
             });
-        } else {
-            alert('PARA INSTALAR:\n\n' +
-                  '1. Toca los 3 puntitos (⋮)\n' +
-                  '2. Busca "Agregar a la pantalla"\n' +
-                  '3. ¡Listo!\n\n' +
-                  '✅ Se guarda en tu celular\n' +
-                  '✅ Funciona sin internet\n' +
-                  '✅ Carga más rápido');
+            
+            // Forzar que se muestre el contenido de la opción A
+            document.getElementById('opcion-A').classList.add('activo');
+            
+            // MODIFICADO: Asegurar que todos los campos estén vacíos al cargar
+            document.getElementById('altoTotalA').value = '';
+            document.getElementById('anchoTotalA').value = '';
+            document.getElementById('cantPuertasA').value = '';
+        });
+
+        // =============================================
+        // PWA FUNCTIONALITY - MODIFICADO PARA OCULTAR BANNER
+        // =============================================
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', function() {
+                navigator.serviceWorker.register('/sw.js')
+                    .then(function(registration) {
+                        console.log('Service Worker registrado:', registration.scope);
+                    })
+                    .catch(function(error) {
+                        console.log('Error registrando Service Worker:', error);
+                    });
+            });
         }
-    };
-    
-    document.body.appendChild(botonInstalar);
-    console.log('✅ Botón instalación creado');
-   }
 
-   // Crear botón cuando cargue la página
-   window.addEventListener('load', crearBotonInstalacion);
+        // MODIFICADO: Eliminar completamente la lógica del botón de instalación
+        // Ya que los meta tags configurados arriba deberían prevenir el banner de instalación automático
+        
+        // Verificar si la app ya está instalada
+        function esAppInstalada() {
+            return window.matchMedia('(display-mode: standalone)').matches ||
+                   window.navigator.standalone === true ||
+                   localStorage.getItem('pwa_instalada') === 'true';
+        }
 
-   // Detectar cuando se instala
-    window.addEventListener('appinstalled', function() {
-    console.log('🎉 PWA instalada exitosamente');
-    
-    // Marcar como instalada
-    localStorage.setItem('pwa_instalada', 'true');
-    
-    // Ocultar botón si existe
-    if (botonInstalar) {
-        botonInstalar.style.display = 'none';
-    }
-});
-</script>
+        // Prevenir el banner de instalación automático de Chrome
+        window.addEventListener('beforeinstallprompt', function(e) {
+            e.preventDefault();
+            console.log('Banner de instalación prevenido');
+        });
+
+        window.addEventListener('appinstalled', function() {
+            localStorage.setItem('pwa_instalada', 'true');
+            console.log('App instalada correctamente');
+        });
+    </script>
 </body>
-
 </html>
+
 
 
 
